@@ -1,9 +1,31 @@
 pipeline {
-    agent { docker 'maven:3.3.3' }
+    agent any
+
     stages {
-        stage('build') {
+        stage ('Compile Stage') {
+
             steps {
-                bat 'mvn --version'
+                withMaven(maven : 'mvn') {
+                    sh 'mvn clean compile'
+                }
+            }
+        }
+
+        stage ('Testing Stage') {
+
+            steps {
+                withMaven(maven : 'mvn') {
+                    sh 'mvn test'
+                }
+            }
+        }
+
+
+        stage ('Deployment Stage') {
+            steps {
+                withMaven(maven : 'mvn') {
+                    sh 'mvn deploy'
+                }
             }
         }
     }
